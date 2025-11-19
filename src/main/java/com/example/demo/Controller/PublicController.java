@@ -36,4 +36,5 @@ public class PublicController {
             return new ResponseEntity<>(myentry, HttpStatus.OK);
 
     }
+
 }

@@ -2,6 +2,8 @@ package com.example.demo.Controller;
 
 import com.example.demo.Repository.ClientRepository;
 import com.example.demo.Service.ClientService;
+import com.example.demo.Service.WeatherService;
+import com.example.demo.api.response.WeatherResponse;
 import com.example.demo.entry.Client;
 import com.example.demo.entry.UserEntry;
 import org.bson.types.ObjectId;
@@ -28,6 +30,8 @@ public class ClientController {
     private ClientService clientService;
     @Autowired
     ClientRepository clientRepository;
+    @Autowired
+    private WeatherService weatherService;
 
     @GetMapping("id/{myid}")
     public Client getClientById(@PathVariable ObjectId myid){
@@ -53,4 +57,14 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
          }
 
+    @GetMapping("city/{mycity}")
+    public ResponseEntity<?> weather(@PathVariable String mycity){
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        WeatherResponse weatherResponse=weatherService.getWeather(mycity);
+        String weather="";
+        if (weatherResponse != null) {
+            weather=", Weather feels like "+ weatherResponse.getCurrent().getFeelslike();
+        }
+        return new ResponseEntity<>("Hi " + authentication.getName() + weather,HttpStatus.OK);
+    }
 }
