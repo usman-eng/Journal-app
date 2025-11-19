@@ -3,6 +3,8 @@ package com.example.demo.Controller;
 import com.example.demo.Service.ClientService;
 import com.example.demo.entry.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,12 @@ public class PublicController {
     }
 
     @PostMapping("/create-client")
-    public Client addClientEntry(@RequestBody Client myentry){
-        clientService.saveNewEntry(myentry);
-        return myentry;
+    public ResponseEntity<?> addClientEntry(@RequestBody Client myentry){
+            boolean saved=clientService.saveNewEntry(myentry);
+            if (!saved) {
+                return new ResponseEntity<>("Failed to create client", HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(myentry, HttpStatus.OK);
+
     }
 }
