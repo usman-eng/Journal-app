@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Service.ClientService;
+import com.example.demo.cache.AppCache;
 import com.example.demo.entry.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ public class AdminController {
 
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private AppCache appCache;
 
     @GetMapping("/get-all-users")
     public ResponseEntity<?> getAllUsers(){
@@ -36,5 +39,10 @@ public class AdminController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/clear-cache")
+    public void clearCache(){
+        appCache.init();
     }
 }
